@@ -23,31 +23,38 @@ struct ReadingsListView: View {
     
     var body: some View {
         NavigationView {
-            List {
-                ForEach(viewModel.readings) { reading in
-                    VStack(alignment: .leading) {
-                        Text("Member: \(reading.Member)")
-                        Text("Condition: \(reading.Condition)")
-                        Text("Systolic: \(reading.Systolic)")
-                        Text("Diastolic: \(reading.Diastolic)")
-                        Text("Date: \(dateFormatter.string(from: Date(timeIntervalSince1970: reading.readingDate)))")
+            VStack {
+                Image("Banner") 
+                    .resizable()
+                    .scaledToFit()
+                    .frame(height: 150)
+                
+                List {
+                    ForEach(viewModel.readings) { reading in
+                        VStack(alignment: .leading) {
+                            Text("Member: \(reading.Member)")
+                            Text("Condition: \(reading.Condition)")
+                            Text("Systolic: \(reading.Systolic)")
+                            Text("Diastolic: \(reading.Diastolic)")
+                            Text("Date: \(dateFormatter.string(from: Date(timeIntervalSince1970: reading.readingDate)))")
+                        }
+                        .onTapGesture {
+                            selectedReading = reading
+                            isSheetPresented = true
+                        }
+                        .background(Color(red: Double.random(in: 0.5...1), green: Double.random(in: 0.5...1), blue: Double.random(in: 0.5...1)))
                     }
-                    .onTapGesture {
-                        selectedReading = reading
-                        isSheetPresented = true
+                    .onDelete { indexSet in
+                        for index in indexSet {
+                            let readingToDelete = viewModel.readings[index]
+                            viewModel.deleteReading(withID: readingToDelete.id)
+                        }
                     }
-                    .background(Color(red: Double.random(in: 0.5...1), green: Double.random(in: 0.5...1), blue: Double.random(in: 0.5...1)))
                 }
-                .onDelete { indexSet in
-                    for index in indexSet {
-                        let readingToDelete = viewModel.readings[index]
-                        viewModel.deleteReading(withID: readingToDelete.id)
-                    }
+                .navigationTitle("Reading Pressure")
+                .onAppear {
+                    viewModel.fetchReadings()
                 }
-            }
-            .navigationTitle("Readings")
-            .onAppear {
-                viewModel.fetchReadings()
             }
         }
         .sheet(item: $selectedReading) { reading in

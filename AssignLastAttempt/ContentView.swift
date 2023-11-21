@@ -26,7 +26,7 @@ struct ContentView: View {
                     .sheet(isPresented: $newReadingPresented) {
                         NewReadingView(newReadingPresented: $newReadingPresented)
                             .onDisappear {
-                                readingsViewModel.fetchReadings() // Refresh readings on NewReadingView close
+                                readingsViewModel.fetchReadings() 
                             }
                     }
             }
