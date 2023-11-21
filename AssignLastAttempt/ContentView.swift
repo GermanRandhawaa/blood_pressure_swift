@@ -4,35 +4,46 @@
 //
 //  Created by German Randhawa on 2023-11-19.
 //
-
 import SwiftUI
 
 struct ContentView: View {
     @State private var selection = 0
-
+    @State private var newReadingPresented = false
+    @StateObject var readingsViewModel = ReadingsListViewModel() // Create the ViewModel
+    @StateObject var reportsViewModel = ReportsViewModel() // Create the Reports ViewModel
+    
     var body: some View {
         TabView(selection: $selection) {
-            NewReadingView(newReadingPresented: .constant(true))
+            NavigationView {
+                ReadingsListView()
+                    .navigationBarItems(trailing: Button(action: {
+                        newReadingPresented = true
+                    }) {
+                        Image(systemName: "plus")
+                    })
+                    .sheet(isPresented: $newReadingPresented) {
+                        NewReadingView(newReadingPresented: $newReadingPresented)
+                            .onDisappear {
+                                readingsViewModel.fetchReadings() // Refresh readings on NewReadingView close
+                            }
+                    }
+            }
+            .tabItem {
+                Label("Readings", systemImage: "book")
+            }
+            .tag(0)
+            
+            ReportsView(viewModel: reportsViewModel) // Navigate to ReportsView
                 .tabItem {
-                    Label("Main", systemImage: "1.circle")
-                }
-                .tag(0)
-
-            Text("Readings List View")
-                .tabItem {
-                    Label("Readings", systemImage: "2.circle")
+                    Label("Reports", systemImage: "chart.bar")
                 }
                 .tag(1)
-
-            Text("Reports View")
-                .tabItem {
-                    Label("Reports", systemImage: "3.circle")
-                }
-                .tag(2)
         }
     }
 }
 
-#Preview {
-    ContentView()
+struct ContentView_Previews: PreviewProvider {
+    static var previews: some View {
+        ContentView()
+    }
 }

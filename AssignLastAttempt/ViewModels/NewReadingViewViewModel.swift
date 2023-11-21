@@ -32,19 +32,18 @@ class NewReadingViewViewModel: ObservableObject {
             return
         }
         
-        let condition: String
-        switch (systolic, diastolic) {
-        case (..<120, ..<80):
+        var condition: String
+        if systolic < 120 && diastolic < 80 {
             condition = "Normal"
-        case (120..<130, ..<80):
+        } else if systolic >= 120 && systolic < 130 && diastolic < 80 {
             condition = "Elevated"
-        case (130..<140, ..<90), (..<140, 80...89):
+        } else if (systolic >= 130 && systolic < 140 && diastolic < 90) || (systolic < 140 && diastolic >= 80 && diastolic <= 89) {
             condition = "High blood pressure (stage 1)"
-        case (140..., ..<90), (130..., 90...):
+        } else if (systolic >= 140 && diastolic < 90) || (systolic >= 130 && diastolic >= 90) {
             condition = "High blood pressure (stage 2)"
-        case (180..., _), (_, 120...):
+        } else if systolic >= 180 || diastolic >= 120 {
             condition = "Hypertensive Crisis"
-        default:
+        } else {
             condition = "Undefined"
         }
 
