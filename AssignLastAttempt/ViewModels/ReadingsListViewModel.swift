@@ -4,6 +4,7 @@
 //
 //  Created by German Randhawa on 2023-11-21.
 //
+
 import Foundation
 import FirebaseFirestore
 
@@ -42,15 +43,14 @@ class ReadingsListViewModel: ObservableObject {
     }
     
     func deleteReading(withID id: String) {
-            let db = Firestore.firestore()
-            db.collection("Readings").document(id).delete { error in
-                if let error = error {
-                    print("Error deleting document: \(error)")
-                } else {
-                    // If the deletion from Firestore was successful, update the local data
-                    self.readings.removeAll { $0.id == id }
-                }
+        let db = Firestore.firestore()
+        db.collection("Readings").document(id).delete { error in
+            if let error = error {
+                print("Error deleting document: \(error)")
+            } else {
+                // If the deletion from Firestore was successful, update the local data
+                self.readings.removeAll { $0.id == id }
             }
         }
     }
-
+}

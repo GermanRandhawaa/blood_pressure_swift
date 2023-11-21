@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 import FirebaseFirestoreSwift
+
 struct ReadingsListView: View {
     
     @StateObject var viewModel = ReadingsListViewModel()
@@ -35,6 +36,7 @@ struct ReadingsListView: View {
                         selectedReading = reading
                         isSheetPresented = true
                     }
+                    .background(Color(red: Double.random(in: 0.5...1), green: Double.random(in: 0.5...1), blue: Double.random(in: 0.5...1)))
                 }
                 .onDelete { indexSet in
                     for index in indexSet {
