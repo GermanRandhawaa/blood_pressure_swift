@@ -51,6 +51,7 @@ class NewReadingViewViewModel: ObservableObject {
         let newGuid = UUID().uuidString
         
         let newReading = Reading(
+            Member : member,
             Condition: condition,
             Diastolic: diastolic,
             Systolic: systolic,
@@ -61,8 +62,6 @@ class NewReadingViewViewModel: ObservableObject {
         // save the model
         let db = Firestore.firestore()
         db.collection("Readings")
-            .document(member)
-            .collection("AllReadings")
             .document(newGuid)
             .setData(newReading.asDictionary()) { error in
                 if let error = error {
